@@ -63,3 +63,11 @@ $ python index.py
 ```shell
 # index.pyを編集
 ```
+
+## ファイルアップロード
+
+### 画像ファイルなどファイルのアップロード
+
+```shell
+$ mkdir uploads
+```

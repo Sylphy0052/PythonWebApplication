@@ -1,13 +1,14 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory, session
 from werkzeug import secure_filename
 
 # appという変数にFlaskオブジェクトを作成するおまじない
 app = Flask(__name__)
 
 UPLOAD_FOLDER = './uploads'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'gif'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['SECRET_KEY'] = os.urandom(24)
 
 def allowed_file(filename):
     return '.' in filename and\
@@ -16,12 +17,7 @@ def allowed_file(filename):
 # ~/にアクセスしたときに実行される関数
 @app.route('/')
 def index():
-    # 返り値の文字列をブラウザに表示する
-    # return 'Hello World'
-    # テンプレートを呼び出す
-    # base.htmlの{{ message }}に'Hello'という文字列を渡している
-    # return render_template('index.html', message='Hello')
-    return render_template('index.html', message='indexページです')
+    return render_template('index.html')
 
 @app.route('/send', methods=['GET', 'POST'])
 def send():
@@ -30,7 +26,8 @@ def send():
         if img_file and allowed_file(img_file.filename):
             filename = secure_filename(img_file.filename)
             img_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return render_template('index.html')
+            img_url = '/uploads/' + filename
+            return render_template('index.html', img_url=img_url)
         else:
             return '''<p>許可されていない拡張子です</p>'''
 
