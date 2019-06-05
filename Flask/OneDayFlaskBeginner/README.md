@@ -71,3 +71,7 @@ $ python index.py
 ```shell
 $ mkdir uploads
 ```
+
+## ログイン処理
+
+### ログインしないとアップロード出来ないように使用
