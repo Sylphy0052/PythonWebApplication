@@ -3,7 +3,7 @@ from flask_blog import app
 from flask_blog import db
 from flask_blog.models.entries import Entry
 
-# http://127.0.0.1:5000/にリクエストが有ったときにshow_entriesメソッドを呼び出す
+# http://127.0.0.1:5000/にリクエストが有ったときにshow_entriesメソッドを呼び出す
 @app.route('/')
 def show_entries():
     # 文字列を返し，ブラウザに表示する
@@ -35,3 +35,11 @@ def add_entry():
     db.session.commit()
     flash('新しく記事が作成されました')
     return redirect(url_for('show_entries'))
+
+# url_forで渡されるIDをint型に指定
+@app.route('/entries/<int:id>', methods=['GET'])
+def show_entry(id):
+    if not session.get('logged_in'):
+        return render_template(url_for('login'))
+    entry = Entry.query.get(id)
+    return render_template('entries/show.html', entry=entry)
