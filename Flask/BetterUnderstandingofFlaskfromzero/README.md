@@ -110,3 +110,9 @@ $ python manage.py init_db
 # テーブルの作成
 $ pipenv run python manage.py init_db
 ```
+
+## Blueprintでアプリケーションを分割する
+blueprintという機能を使って大きくなったアプリケーションに対して機能を分割する．
+
+1. divisionalな構造化: アプリケーションの中に複数の機能があるとき，その小さな機能を小さなアプリケーションとして独立させて構成できる．(view, template, static)をまとめて独立したアプリケーションにすること
+2. functionalな構造化: templateやstaticファイルを共通で使っている場合にビューのみを分ける方法
