@@ -116,3 +116,122 @@ blueprintという機能を使って大きくなったアプリケーション�
 
 1. divisionalな構造化: アプリケーションの中に複数の機能があるとき，その小さな機能を小さなアプリケーションとして独立させて構成できる．(view, template, static)をまとめて独立したアプリケーションにすること
 2. functionalな構造化: templateやstaticファイルを共通で使っている場合にビューのみを分ける方法
+
+## テストカバレッジの計測とレポートの作成
+テストカバレッジ: アプリケーション全体のうちどれだけの範囲がテストコードが書かれているかという指標．100%に近づくほど，アプリケーションのコードがより網羅的にテストされているということを表す．
+
+```shell
+$ pipenv install coverage
+```
+
+```
+# application/.coveragerc
+[run]
+source = ./flask_blog
+```
+
+```shell
+# テストの実行
+$ coverage run -m unittest
+# テストカバレッジ
+# coverage report -m
+Name                           Stmts   Miss  Cover   Missing
+------------------------------------------------------------
+flask_blog/__init__.py             8      0   100%
+flask_blog/config.py               7      0   100%
+flask_blog/models/entries.py      14      4    71%   18-20, 24
+flask_blog/scripts/db.py           5      0   100%
+flask_blog/views/entries.py       45     22    51%   31, 38-45, 53-54, 61-62, 70-76, 84-88
+flask_blog/views/view.py          26      2    92%   9, 40
+------------------------------------------------------------
+TOTAL                            105     28    73%
+```
+
+- Name: テスト対象のファイル
+- Stmts: 対象ファイルにおけるテスト対象となるコード行数
+- Miss: テストされていないコード行数
+- Cover: テストカバレッジになる
+- Missing: -mオプションで実行したときのみ表示される．実際にテストされていないコードが何行目に有るか示す
+
+```shell
+# レポートの作成
+$ coverage html
+```
+
+## アプリケーションの構成
+```
+.
+├── Pipfile
+├── Pipfile.lock
+├── flask_blog
+│   ├── __init__.py
+│   ├── config.py
+│   ├── flask_blog.db
+│   ├── models
+│   │   └── entries.py
+│   ├── scripts
+│   │   └── db.py
+│   ├── static
+│   │   └── style.css
+│   ├── templates
+│   │   ├── entries
+│   │   │   ├── edit.html
+│   │   │   ├── index.html
+│   │   │   ├── new.html
+│   │   │   └── show.html
+│   │   ├── layout.html
+│   │   └── login.html
+│   └── views
+│       ├── entries.py
+│       └── view.py
+├── htmlcov
+│   ├── coverage_html.js
+│   ├── flask_blog___init___py.html
+│   ├── flask_blog_config_py.html
+│   ├── flask_blog_models_entries_py.html
+│   ├── flask_blog_scripts_db_py.html
+│   ├── flask_blog_views_entries_py.html
+│   ├── flask_blog_views_view_py.html
+│   ├── index.html
+│   ├── jquery.ba-throttle-debounce.min.js
+│   ├── jquery.hotkeys.js
+│   ├── jquery.isonscreen.js
+│   ├── jquery.min.js
+│   ├── jquery.tablesorter.min.js
+│   ├── keybd_closed.png
+│   ├── keybd_open.png
+│   ├── status.json
+│   └── style.css
+├── manage.py
+├── server.py
+└── test_flask_blog.py
+```
+
+- Pipfile/Pipfile.lock
+  - pythonライブラリの管理ファイル
+- manage.py
+  - スクリプトの管理ファイル
+- server.py
+  - 起動ファイル
+- .coveragerc
+  - テストカバレッジの定義ファイル
+- htmlcov
+  - テストカバレッジレポートの格納フォルダ
+- flask_blog
+  - アプリケーションの本体フォルダ
+- \_\_init\_\_.py
+  - アプリケーションの本体ファイル
+- config.py
+  - アプリケーションの設定ファイル
+- flask_blog.db
+  - データベースファイル
+- models
+  - モデルファイルが格納されるフォルダ
+- scripts
+  - スクリプト実行ファイルが格納されるフォルダ
+- static
+  - CSS,JSなどの静的ファイルが格納されるフォルダ
+- templates
+  - テンプレートファイルが格納されるフォルダ
+- views
+  - ビューファイルが格納されるフォルダ
